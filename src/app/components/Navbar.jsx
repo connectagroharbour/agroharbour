@@ -12,6 +12,18 @@ export function Navbar() {
   const hasDarkHero = ['/', '/about', '/services', '/contact'].includes(location.pathname);
   const isSolidNavbar = isScrolled || !hasDarkHero;
 
+  const handleLinkClick = (path) => {
+    if (location.pathname === path) {
+      // Immediate scroll to top for mobile reliability
+      window.scrollTo(0, 0);
+      // Extra precaution for some mobile browsers
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
+    setIsMobileMenuOpen(false);
+    setIsServicesDropdownOpen(false);
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -47,7 +59,11 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
+          <Link 
+            to="/" 
+            onClick={() => handleLinkClick("/")}
+            className="flex items-center gap-2 group"
+          >
             <img 
               src="/Agro-logo.png" 
               alt="AgroHarbour - Modern Agriculture Consulting Brand Logo" 
@@ -68,6 +84,7 @@ export function Navbar() {
                   >
                     <Link
                       to={link.path}
+                      onClick={() => handleLinkClick(link.path)}
                       className={`flex items-center gap-1 text-sm font-medium transition-colors duration-300 hover:text-[#2E7D32] ${
                         location.pathname === link.path
                           ? "text-[#2E7D32]"
@@ -90,6 +107,7 @@ export function Navbar() {
                           <Link
                             to="/services"
                             state={{ category: "hydroponics" }}
+                            onClick={() => handleLinkClick("/services")}
                             className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-[#F1F8E9] hover:text-[#2E7D32] transition-colors"
                           >
                             <Waves size={18} className="text-[#2E7D32]" />
@@ -101,6 +119,7 @@ export function Navbar() {
                           <Link
                             to="/services"
                             state={{ category: "soil" }}
+                            onClick={() => handleLinkClick("/services")}
                             className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-[#F1F8E9] hover:text-[#2E7D32] transition-colors border-t border-gray-50"
                           >
                             <Sprout size={18} className="text-[#2E7D32]" />
@@ -119,6 +138,7 @@ export function Navbar() {
                 <Link
                   key={link.path}
                   to={link.path}
+                  onClick={() => handleLinkClick(link.path)}
                   className={`relative text-sm font-medium transition-colors duration-300 hover:text-[#2E7D32] ${
                     location.pathname === link.path
                       ? "text-[#2E7D32]"
@@ -140,6 +160,7 @@ export function Navbar() {
             })}
             <Link
               to="/contact"
+              onClick={() => handleLinkClick("/contact")}
               className="bg-gradient-to-r from-[#2E7D32] to-[#1B5E20] text-white px-6 py-2.5 rounded-full font-medium hover:shadow-lg hover:scale-105 transition-all duration-300"
             >
               Book Consultation
@@ -177,6 +198,7 @@ export function Navbar() {
                 >
                   <Link
                     to={link.path}
+                    onClick={() => handleLinkClick(link.path)}
                     className={`block py-2 text-base font-medium transition-colors ${
                       location.pathname === link.path
                         ? "text-[#2E7D32]"
@@ -189,6 +211,7 @@ export function Navbar() {
               ))}
               <Link
                 to="/contact"
+                onClick={() => handleLinkClick("/contact")}
                 className="block w-full bg-gradient-to-r from-[#2E7D32] to-[#1B5E20] text-white px-6 py-3 rounded-full font-medium text-center mt-4"
               >
                 Book Consultation
