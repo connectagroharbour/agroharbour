@@ -40,7 +40,7 @@ export function AboutSection() {
               initial={{ opacity: 0, scale: 0 }}
               animate={isInView ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="absolute -bottom-6 -right-6 bg-white rounded-2xl p-6 shadow-xl"
+              className="absolute bottom-4 right-4 md:-bottom-6 md:-right-6 bg-white rounded-2xl p-4 md:p-6 shadow-xl z-10"
             >
               <div className="flex items-center gap-3">
                 <div className="bg-gradient-to-br from-[#2E7D32] to-[#1B5E20] p-3 rounded-xl">
