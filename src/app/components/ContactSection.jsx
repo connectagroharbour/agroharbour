@@ -8,18 +8,41 @@ export function ContactSection() {
   const isInView = useInView(ref, { once: true, amount: 0.2 });
   const [formData, setFormData] = useState({
     name: "",
+    email: "",
     phone: "",
     message: "",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
 
-  const handleSubmit = (e) => {
-    setIsSubmitted(true);
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({ name: "", phone: "", message: "" });
-    }, 3000);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Create FormData for the request
+    const formDataToSubmit = new FormData();
+    Object.keys(formData).forEach(key => {
+      formDataToSubmit.append(key, formData[key]);
+    });
+    // Add professional subject for the consultation request
+    formDataToSubmit.append("subject", "Book Consultation");
+
+    try {
+      // Send the data using fetch
+      await fetch(import.meta.env.VITE_GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: new URLSearchParams(formDataToSubmit),
+      });
+
+      setIsSubmitted(true);
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setFormData({ name: "", email: "", phone: "", message: "" });
+      }, 3000);
+    } catch (error) {
+      console.error("Submission error:", error);
+      alert("Something went wrong. Please try again or contact us via WhatsApp.");
+    }
   };
 
   const handleChange = (e) => {
@@ -56,111 +79,142 @@ export function ContactSection() {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8 }}
           >
-            <iframe
-              name="hidden_iframe_section"
-              id="hidden_iframe_section"
-              style={{ display: "none" }}
-            ></iframe>
-
-            <form 
-              action="https://script.google.com/macros/s/AKfycbyS99VV1P1txbd5nsMt0PiulW-fUhRMTSUwRByFMSRXBxFaq0gaYUdCrzVkS8VlcAYgoQ/exec"
-              method="POST"
-              target="hidden_iframe_section"
-              onSubmit={handleSubmit} 
-              className="space-y-6"
-            >
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                  Full Name
-                </label>
-                <motion.input
-                  whileFocus={{ scale: 1.01 }}
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  onFocus={() => setFocusedField("name")}
-                  onBlur={() => setFocusedField(null)}
-                  required
-                  className={`w-full px-4 py-3 rounded-lg border-2 transition-all duration-300 focus:outline-none ${
-                    focusedField === "name"
-                      ? "border-[#2E7D32] shadow-lg shadow-[#2E7D32]/20"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
-                  placeholder="Enter your full name"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                  Phone Number
-                </label>
-                <motion.input
-                  whileFocus={{ scale: 1.01 }}
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  onFocus={() => setFocusedField("phone")}
-                  onBlur={() => setFocusedField(null)}
-                  required
-                  className={`w-full px-4 py-3 rounded-lg border-2 transition-all duration-300 focus:outline-none ${
-                    focusedField === "phone"
-                      ? "border-[#2E7D32] shadow-lg shadow-[#2E7D32]/20"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
-                  placeholder="+91 97834-41513"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                  Message
-                </label>
-                <motion.textarea
-                  whileFocus={{ scale: 1.01 }}
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  onFocus={() => setFocusedField("message")}
-                  onBlur={() => setFocusedField(null)}
-                  required
-                  rows={5}
-                  className={`w-full px-4 py-3 rounded-lg border-2 transition-all duration-300 focus:outline-none resize-none ${
-                    focusedField === "message"
-                      ? "border-[#2E7D32] shadow-lg shadow-[#2E7D32]/20"
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
-                  placeholder="Tell us about your farming needs..."
-                />
-              </div>
-
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                disabled={isSubmitted}
-                className="w-full bg-gradient-to-r from-[#2E7D32] to-[#1B5E20] text-white px-8 py-4 rounded-lg font-semibold hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 relative overflow-hidden group"
+            {isSubmitted ? (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-white rounded-2xl p-8 shadow-xl text-center space-y-6 border border-gray-100"
               >
-                {isSubmitted ? (
-                  <>
-                    <CheckCircle className="w-5 h-5" />
-                    Message Sent!
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    Book Consultation
-                  </>
-                )}
-                
-                {/* Ripple effect */}
-                <span className="absolute inset-0 bg-white/20 scale-0 group-hover:scale-100 rounded-lg transition-transform duration-500" />
-              </motion.button>
-            </form>
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                  <CheckCircle className="w-12 h-12 text-[#2E7D32]" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">Thank You!</h3>
+                  <p className="text-gray-600">
+                    Your consultation request has been received successfully.
+                  </p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-xl inline-block">
+                  <p className="text-[#2E7D32] font-medium flex items-center gap-2 justify-center">
+                    <Send className="w-4 h-4" />
+                    Our experts will contact you within 24 hours.
+                  </p>
+                </div>
+                <p className="text-sm text-gray-500">
+                  A confirmation email has been sent to your inbox.
+                </p>
+              </motion.div>
+            ) : (
+              <form 
+                onSubmit={handleSubmit} 
+                className="space-y-6"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                      Full Name
+                    </label>
+                    <motion.input
+                      whileFocus={{ scale: 1.01 }}
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      onFocus={() => setFocusedField("name")}
+                      onBlur={() => setFocusedField(null)}
+                      required
+                      className={`w-full px-4 py-3 rounded-lg border-2 transition-all duration-300 focus:outline-none ${
+                        focusedField === "name"
+                          ? "border-[#2E7D32] shadow-lg shadow-[#2E7D32]/20"
+                          : "border-gray-200 hover:border-gray-300"
+                      }`}
+                      placeholder="Enter your full name"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                      Email Address
+                    </label>
+                    <motion.input
+                      whileFocus={{ scale: 1.01 }}
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      onFocus={() => setFocusedField("email")}
+                      onBlur={() => setFocusedField(null)}
+                      required
+                      className={`w-full px-4 py-3 rounded-lg border-2 transition-all duration-300 focus:outline-none ${
+                        focusedField === "email"
+                          ? "border-[#2E7D32] shadow-lg shadow-[#2E7D32]/20"
+                          : "border-gray-200 hover:border-gray-300"
+                      }`}
+                      placeholder="your@email.com"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone Number
+                  </label>
+                  <motion.input
+                    whileFocus={{ scale: 1.01 }}
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    onFocus={() => setFocusedField("phone")}
+                    onBlur={() => setFocusedField(null)}
+                    required
+                    className={`w-full px-4 py-3 rounded-lg border-2 transition-all duration-300 focus:outline-none ${
+                      focusedField === "phone"
+                        ? "border-[#2E7D32] shadow-lg shadow-[#2E7D32]/20"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                    placeholder="+91 97834-41513"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                    Message
+                  </label>
+                  <motion.textarea
+                    whileFocus={{ scale: 1.01 }}
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    onFocus={() => setFocusedField("message")}
+                    onBlur={() => setFocusedField(null)}
+                    required
+                    rows={5}
+                    className={`w-full px-4 py-3 rounded-lg border-2 transition-all duration-300 focus:outline-none resize-none ${
+                      focusedField === "message"
+                        ? "border-[#2E7D32] shadow-lg shadow-[#2E7D32]/20"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                    placeholder="Tell us about your farming needs..."
+                  />
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-[#2E7D32] to-[#1B5E20] text-white px-8 py-4 rounded-lg font-semibold hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden group"
+                >
+                  <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  Book Consultation
+                  <span className="absolute inset-0 bg-white/20 scale-0 group-hover:scale-100 rounded-lg transition-transform duration-500" />
+                </motion.button>
+              </form>
+            )}
           </motion.div>
 
           {/* Contact Information */}
