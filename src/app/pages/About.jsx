@@ -44,7 +44,7 @@ export function About() {
       name: "Mr. Punit Gupta",
       role: "Founder & Lead Agronomist",
       bio: "Dedicated to transforming traditional farming with modern scientific practices and sustainable solutions.",
-      image: "pic2.jpeg",
+      image: "punit.jpeg",
       gradient: "from-emerald-500 to-teal-600",
       expertise: ["Hydroponics Expert", "Strawberry Production Expert", "Microgreens Expert"],
       social: { linkedin: "#", mail: "mailto:punit@agroharbour.com" }
@@ -98,7 +98,7 @@ export function About() {
 
   return (
     <main>
-      <SEO 
+      <SEO
         title="About Us"
         description="Learn more about AgroHarbour, our mission to empower farmers with science-driven solutions, and our team of expert agronomists."
         keywords="about agroharbour, agronomist team, punit gupta, agricultural mission, sustainable farming india"
