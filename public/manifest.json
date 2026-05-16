@@ -1,0 +1,25 @@
+{
+  "short_name": "AgroHarbour",
+  "name": "AgroHarbour - Leading Agricultural Solutions",
+  "icons": [
+    {
+      "src": "/Agro-logo.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/Agro-logo.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/Agro-logo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#2E7D32",
+  "background_color": "#F1F8E9"
+}

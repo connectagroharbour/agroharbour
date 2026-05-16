@@ -26,7 +26,7 @@ const SEO = ({
       metaDescription.setAttribute('name', 'description');
       document.head.appendChild(metaDescription);
     }
-    metaDescription.setAttribute('content', description || 'AgroHarbour provides leading agricultural solutions, soil testing, and modern hydroponic consulting to help farmers maximize yields.');
+    metaDescription.setAttribute('content', description || 'AgroHarbour provides expert agronomist services, soil testing, and modern hydroponic consulting to help farmers maximize yields and achieve sustainable growth.');
 
     // Update Meta Keywords
     if (keywords) {
@@ -51,10 +51,11 @@ const SEO = ({
     };
 
     updateOGTag('og:title', fullTitle);
-    updateOGTag('og:description', description || 'Leading Agricultural Solutions');
-    updateOGTag('og:image', `${siteUrl}${ogImage}`);
+    updateOGTag('og:description', description || 'Expert agronomist services and modern farming solutions for sustainable growth.');
+    updateOGTag('og:image', ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`);
     updateOGTag('og:url', canonicalUrl);
     updateOGTag('og:type', ogType);
+
 
     // Update Canonical Link
     let canonicalLink = document.querySelector('link[rel="canonical"]');
