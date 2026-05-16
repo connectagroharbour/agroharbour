@@ -12,7 +12,7 @@ const SEO = ({
   const location = useLocation();
   const baseTitle = 'AgroHarbour';
   const fullTitle = title ? `${title} | ${baseTitle}` : `${baseTitle} - Leading Agricultural Solutions`;
-  const siteUrl = 'https://agroharbour.com'; // Replace with actual domain
+  const siteUrl = 'https://www.agroharbour.com'; // Replace with actual domain
   const canonicalUrl = `${siteUrl}${canonicalPath || location.pathname}`;
 
   useEffect(() => {
